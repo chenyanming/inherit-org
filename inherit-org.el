@@ -111,7 +111,7 @@ sure that we are at the beginning of the line.")
 
 (defun inherit-org-w3m-mode-fontify ()
   "Fontify w3m mode bufffer."
-  (face-remap-add-relative 'w3m-header-line-title 'org-level-1)
+  ;; (face-remap-add-relative 'w3m-header-line-title 'org-level-1)
   (face-remap-add-relative 'w3m-anchor 'org-link)
   ;; (face-remap-add-relative 'w3m-current-anchor 'link)
   )

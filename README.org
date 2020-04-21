@@ -18,6 +18,7 @@
     - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
   - [[#enable-inherit-orgel][Enable inherit-org.el]]
+- [[#todo][TODO]]
 
 * Description
 =inherit-org=: Inherit org faces to non-org buffers.
@@ -118,3 +119,8 @@ git clone git@github.com:chenyanming/inherit-org.git ~/.emacs.d/private/inherit-
 PS: =inherit-org-mode= is a minor mode that supports =imenu=, =outline-minor-mode= and
 =org-indent-mode= You can choose =add-hook= to enable globally for specific modes or
 just enable/disable via =M-x= =inherit-mode= on the fly.
+
+
+* TODO TODO
+
+- [ ] inherit org features in programming mode
