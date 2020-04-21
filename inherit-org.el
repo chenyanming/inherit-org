@@ -39,13 +39,38 @@
 (require 'outline)
 (require 'org-indent)
 
+(defvar inherit-org-outline-regexp (concat " ?+"
+                                       (regexp-opt
+                                        inherit-org-bullets-bullet-list
+                                        t) " +")
+  "TODO: Regexp to match inherit-org headlines.")
+
+(defvar inherit-org-outline-regexp-bol (concat " ?+"
+                                           (regexp-opt
+                                            inherit-org-bullets-bullet-list
+                                            t) "\\( +\\)")
+  "TODO: Regexp to match inherit-org headlines.
+This is similar to `inherit-org-outline-regexp' but additionally makes
+sure that we are at the beginning of the line.")
+
+(defvar inherit-org-imenu-regexp-bol (concat "^\\(?: ?+\\)"
+                                         (regexp-opt
+                                          inherit-org-bullets-bullet-list
+                                          t) "\\( .*\\)$")
+  "TODO: Regexp to match inherit-org headlines.
+This is similar to `inherit-org-outline-regexp' but additionally makes
+sure that we are at the beginning of the line.")
+
+(defvar inherit-org-level 'inherit-org-level
+  "Compute the header's nesting level in an outline.")
+
 (defun inherit-org-w3m-headline-fontify ()
   "Fontify bold text in the buffer containing halfdump."
   (goto-char (point-min))
   (while (re-search-forward "^<b>.*</b>$" nil t)
     (beginning-of-line)
     (let ((start (match-beginning 0)))
-      (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'org-level-1))
+      (insert (propertize (concat (inherit-org-bullets-level-string 1) " ") 'face 'org-level-1))
       (delete-region start (match-beginning 0))
       (when (re-search-forward "</b>" nil t) ;; "</b[ \t\r\f\n]*"
         (delete-region (match-beginning 0) (match-end 0))
@@ -89,7 +114,77 @@
         ((eq major-mode 'helpful-mode)
          (inherit-org-helpful-mode-fontify))))
 
-;; (add-hook 'shrface-mode-hook #'inherit-org)
+;;;###autoload
+(defun inherit-org-imenu-get-tree ()
+  "Produce the index for Imenu."
+  (dolist (x org-imenu-markers) (move-marker x nil))
+  (setq org-imenu-markers nil)
+  (org-with-wide-buffer
+   (goto-char (point-max))
+   (let* ((re inherit-org-imenu-regexp-bol)
+          (subs (make-vector (1+ org-imenu-depth) nil))
+          (last-level 0))
+     (while (re-search-backward re nil t)
+       ;; (message (int-to-string (inherit-org-level (match-string 1))))
+       (let ((level (1- (funcall inherit-org-level)))
+             (headline (match-string 2)))
+         (message (int-to-string level ))
+         (message headline)
+         ;; (when  (<= level org-imenu-depth)
+         (when (and (<= level org-imenu-depth) (org-string-nw-p headline))
+           (let* ((m (point-marker))
+                  (item (propertize headline 'org-imenu-marker m 'org-imenu t)))
+             (message item)
+             (push m org-imenu-markers)
+             (if (>= level last-level)
+                 (push (cons item m) (aref subs level))
+               (push (cons item
+                           (cl-mapcan #'identity (cl-subseq subs (1+ level))))
+                     (aref subs level))
+               (cl-loop for i from (1+ level) to org-imenu-depth
+                        do (aset subs i nil)))
+             (setq last-level level)))))
+     (aref subs 0))))
+
+(defun inherit-org-level ()
+  "Function of no args to compute a header's nesting level in an outline."
+  (1+ (cl-position (match-string 1) inherit-org-bullets-bullet-list :test 'equal)))
+
+(defun inherit-org-regexp ()
+  "Set regexp for outline minior mode."
+  (setq-local outline-regexp inherit-org-outline-regexp)
+  (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
+  (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
+  (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
+  (setq-local outline-level inherit-org-level))
+
+
+;;;###autoload
+(define-minor-mode inherit-org-mode
+  "Toggle shr minor mode.
+1. imenu
+2. outline-minor-mode
+3. org-indent-mode "
+  :group 'inherit-org
+  (cond
+   (inherit-org-mode
+    (inherit-org-regexp)
+    (inherit-org-shr-item-bullet)
+    (setq imenu-create-index-function #'inherit-org-imenu-get-tree)
+    (outline-minor-mode)
+    (org-indent-mode)
+    (run-hooks 'inherit-org-mode-hook))
+   (t
+    (inherit-org-shr-item-bullet)
+    (setq imenu-create-index-function nil)
+    (outline-minor-mode -1)
+    (org-indent-mode -1))))
+
+
+
+
+
+;; (add-hook 'inherit-org-mode-hook #'inherit-org)
 
 (provide 'inherit-org)
 

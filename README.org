@@ -101,26 +101,26 @@ git clone git@github.com:chenyanming/inherit-org.git ~/.emacs.d/private/inherit-
 
 ** Settings for different major modes
 
-=shrface-mode= is a minor mode that supports =imenu=, =outline-minor-mode= and
+=inherit-org-mode= is a minor mode that supports =imenu=, =outline-minor-mode= and
 =org-indent-mode= You can choose =add-hook= to enable globally for specific modes or
-just enable/disable via =M-x= =shrface-mode= on the fly.
+just enable/disable via =M-x= =inherit-mode= on the fly.
 
 *** Info mode
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'info
-  (add-hook 'Info-mode-hook 'inherit-org)) ; apply the shrfaces to info mode buffers
+  (add-hook 'Info-mode-hook 'inherit-org)) ; inherit org faces to info mode buffers
 #+END_SRC
 
 *** helpful mode
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'helpful
-  (add-hook 'helpful-mode-hook 'inherit-org)) ; apply the shrfaces to helpful mode buffers
+  (add-hook 'helpful-mode-hook 'inherit-org)) ; inherit org faces to helpful mode buffers
 #+END_SRC
 
 *** w3m mode
 Only one level is supported:
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'w3m
-  (add-hook 'w3m-fontify-before-hook inherit-org-w3m-headline-fontify) ; fontify w3m headline before applying shrfaces
-  (add-hook 'w3m-fontify-after-hook 'inherit-org)) ; apply the shrfaces to w3m mode buffers
+  (add-hook 'w3m-fontify-before-hook inherit-org-w3m-headline-fontify) ; fontify w3m headline before applying inherit-org
+  (add-hook 'w3m-fontify-after-hook 'inherit-org)) ; apply the inherit-org to w3m mode buffers
 #+END_SRC
