@@ -39,6 +39,18 @@
 (require 'outline)
 (require 'org-indent)
 
+(defcustom inherit-org-bullets-bullet-list
+  (or (bound-and-true-p org-bullets-bullet-list)
+      (bound-and-true-p org-superstar-headline-bullets-list)
+      '("◉"
+        "○"
+        "✸"
+        "✿"))
+  "Bullets for headings."
+  :group 'inherit-org
+  :type '(repeat (string :tag "Bullet character")))
+
+
 (defvar inherit-org-outline-regexp (concat " ?+"
                                        (regexp-opt
                                         inherit-org-bullets-bullet-list
@@ -70,7 +82,7 @@ sure that we are at the beginning of the line.")
   (while (re-search-forward "^<b>.*</b>$" nil t)
     (beginning-of-line)
     (let ((start (match-beginning 0)))
-      (insert (propertize (concat (inherit-org-bullets-level-string 1) " ") 'face 'org-level-1))
+      (insert (propertize (concat (car inherit-org-bullets-bullet-list) " ") 'face 'org-level-1))
       (delete-region start (match-beginning 0))
       (when (re-search-forward "</b>" nil t) ;; "</b[ \t\r\f\n]*"
         (delete-region (match-beginning 0) (match-end 0))
@@ -108,11 +120,24 @@ sure that we are at the beginning of the line.")
   "Fontify all supported major mode."
   (interactive)
   (cond ((eq major-mode 'w3m-mode)
-         (inherit-org-w3m-mode-fontify))
+         (inherit-org-w3m-mode-fontify)
+         (inherit-org-additional-features-on))
         ((eq major-mode 'Info-mode)
          (inherit-org-info-mode-fontify))
         ((eq major-mode 'helpful-mode)
-         (inherit-org-helpful-mode-fontify))))
+         (inherit-org-helpful-mode-fontify)
+         (inherit-org-additional-features-on))))
+
+(defun inherit-org-additional-features-off ()
+  (setq imenu-create-index-function nil)
+  (outline-minor-mode -1)
+  (org-indent-mode -1))
+
+(defun inherit-org-additional-features-on ()
+  (inherit-org-regexp)
+  (setq imenu-create-index-function #'inherit-org-imenu-get-tree)
+  (outline-minor-mode)
+  (org-indent-mode))
 
 ;;;###autoload
 (defun inherit-org-imenu-get-tree ()
@@ -168,21 +193,9 @@ sure that we are at the beginning of the line.")
   :group 'inherit-org
   (cond
    (inherit-org-mode
-    (inherit-org-regexp)
-    (inherit-org-shr-item-bullet)
-    (setq imenu-create-index-function #'inherit-org-imenu-get-tree)
-    (outline-minor-mode)
-    (org-indent-mode)
-    (run-hooks 'inherit-org-mode-hook))
+    (inherit-org))
    (t
-    (inherit-org-shr-item-bullet)
-    (setq imenu-create-index-function nil)
-    (outline-minor-mode -1)
-    (org-indent-mode -1))))
-
-
-
-
+    (inherit-org-additional-features-off))))
 
 ;; (add-hook 'inherit-org-mode-hook #'inherit-org)
 
