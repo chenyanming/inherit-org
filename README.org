@@ -18,10 +18,6 @@
     - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
   - [[#enable-inherit-orgel][Enable inherit-org.el]]
-  - [[#settings-for-different-major-modes][Settings for different major modes]]
-    - [[#info-mode][Info mode]]
-    - [[#helpful-mode][helpful mode]]
-    - [[#w3m-mode][w3m mode]]
 
 * Description
 =inherit-org=: Inherit org faces to non-org buffers.
@@ -30,12 +26,20 @@ The following major modes are supported at this moment:
 
 1. [[https://github.com/emacs-w3m/emacs-w3m][w3m mode]]
    - Inherit org faces
+   - =inherit-org-mode=
+     - =imenu=
+     - =outline-minor-mode=
+     - =org-indent-mode=
 
 2. [[https://www.emacswiki.org/emacs/InfoMode][Info mode]]
    - Inherit org faces
 
 3. [[https://github.com/Wilfred/helpful][helpful mode]]
    - Inherit org faces
+   - =inherit-org-mode=
+     - =imenu=
+     - =outline-minor-mode=
+     - =org-indent-mode=
 
 * Screenshots
 ** w3m
@@ -96,31 +100,21 @@ git clone git@github.com:chenyanming/inherit-org.git ~/.emacs.d/private/inherit-
 ** Enable inherit-org.el
 
 #+BEGIN_SRC emacs-lisp
-(require 'inherit-org)
+(with-eval-after-load 'org
+  (require 'inherit-org)
+
+  (with-eval-after-load 'info
+    (add-hook 'Info-mode-hook 'inherit-org-mode))
+
+  (with-eval-after-load 'helpful
+    (add-hook 'helpful-mode-hook 'inherit-org-mode))
+
+  (with-eval-after-load 'w3m
+    (add-hook 'w3m-fontify-before-hook 'inherit-org-w3m-headline-fontify) ;only one level is supported
+    (add-hook 'w3m-fontify-after-hook 'inherit-org-mode)))
+
 #+END_SRC
 
-** Settings for different major modes
-
-=inherit-org-mode= is a minor mode that supports =imenu=, =outline-minor-mode= and
+PS: =inherit-org-mode= is a minor mode that supports =imenu=, =outline-minor-mode= and
 =org-indent-mode= You can choose =add-hook= to enable globally for specific modes or
 just enable/disable via =M-x= =inherit-mode= on the fly.
-
-*** Info mode
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'info
-  (add-hook 'Info-mode-hook 'inherit-org)) ; inherit org faces to info mode buffers
-#+END_SRC
-
-*** helpful mode
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'helpful
-  (add-hook 'helpful-mode-hook 'inherit-org)) ; inherit org faces to helpful mode buffers
-#+END_SRC
-
-*** w3m mode
-Only one level is supported:
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'w3m
-  (add-hook 'w3m-fontify-before-hook inherit-org-w3m-headline-fontify) ; fontify w3m headline before applying inherit-org
-  (add-hook 'w3m-fontify-after-hook 'inherit-org)) ; apply the inherit-org to w3m mode buffers
-#+END_SRC
