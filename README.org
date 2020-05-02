@@ -140,4 +140,4 @@ For Text modes, fundemental mode, you can just insert =*/+/-= as starting just l
 This feature is not perfect.
 
 I found it is useful when I want to make some comments stand out than others, by just adding some =*=
-[[demo.gif]]
+[[img/demo.gif]]
