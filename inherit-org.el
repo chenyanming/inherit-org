@@ -25,13 +25,12 @@
 ;;; Commentary:
 
 ;; inherit-org: Inherit Org Faces to non-org buffers
-;; Inherit org faces to non-org buffers
-;
-;; The following major modes are supported:
-;;
-;; 1. w3m mode
-;; 2. info mode
-;; 3. helpful mode
+;; * Inherit org faces to non-org buffers
+;; ** The following major modes are supported
+;; - w3m mode
+;; - info mode
+;; - helpful mode
+;; - Other major modes: Headline/List fontified
 
 ;;; Code:
 

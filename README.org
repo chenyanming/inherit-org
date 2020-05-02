@@ -1,5 +1,5 @@
 #+TITLE:   INHERIT-ORG
-#+DATE:    April 21, 2020
+#+DATE:    May 3, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 
@@ -9,6 +9,7 @@
   - [[#w3m][w3m]]
   - [[#info][Info]]
   - [[#helpful][helpful]]
+  - [[#fundamental-mode-or-other-modes][Fundamental mode or other modes]]
 - [[#prerequisites][Prerequisites]]
 - [[#before-the-installation][Before the installation]]
 - [[#installation][Installation]]
@@ -18,7 +19,7 @@
     - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
   - [[#enable-inherit-orgel][Enable inherit-org.el]]
-- [[#todo][TODO]]
+  - [[#inherit-org-fontify-buffer][inherit-org-fontify-buffer]]
 
 * Description
 =inherit-org=: Inherit org faces to non-org buffers.
@@ -27,20 +28,24 @@ The following major modes are supported at this moment:
 
 1. [[https://github.com/emacs-w3m/emacs-w3m][w3m mode]]
    - Inherit org faces
-   - =inherit-org-mode=
+   - Minor mode: =inherit-org-mode=
      - =imenu=
      - =outline-minor-mode=
      - =org-indent-mode=
 
 2. [[https://www.emacswiki.org/emacs/InfoMode][Info mode]]
-   - Inherit org faces
+   - Only Inherit org faces
 
 3. [[https://github.com/Wilfred/helpful][helpful mode]]
    - Inherit org faces
-   - =inherit-org-mode=
+   - Minor mode: =inherit-org-mode=
      - =imenu=
      - =outline-minor-mode=
      - =org-indent-mode=
+      
+4. Any other modes
+   - Function: =inherit-org-fontify-buffer=
+     Seriously, it is a just for fun feature, but interesting though.
 
 * Screenshots
 ** w3m
@@ -49,6 +54,10 @@ The following major modes are supported at this moment:
 #+html: <p align="center"><img src="img/Info.png" width="60%"/></p>
 ** helpful
 #+html: <p align="center"><img src="img/helpful.png" width="60%"/></p>
+** Fundamental mode or other modes
+[[img/Fundamental.png]]
+[[img/Fundamental-2.png]]
+[[img/Programming.png]]
 
 * Prerequisites
 This package uses =org=, =imenu=, =outline=
@@ -120,7 +129,11 @@ PS: =inherit-org-mode= is a minor mode that supports =imenu=, =outline-minor-mod
 =org-indent-mode= You can choose =add-hook= to enable globally for specific modes or
 just enable/disable via =M-x= =inherit-mode= on the fly.
 
+** inherit-org-fontify-buffer
+#+BEGIN_SRC emacs-lisp
+M-x inherit-org-fontify-buffer
+#+END_SRC
 
-* TODO TODO
-
-- [ ] inherit org features in programming mode
+Fontify any bufffers just like org mode.
+For Programming modes, after comment start, insert */+/- followed by a space.
+For Text modes, fundemental mode, you can just insert */+/- as starting just like org mode.
