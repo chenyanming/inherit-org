@@ -45,7 +45,6 @@ The following major modes are supported at this moment:
       
 4. Any other modes
    - Function: =inherit-org-fontify-buffer=
-     Seriously, it is a just for fun feature, but interesting though.
 
 * Screenshots
 ** w3m
@@ -135,5 +134,10 @@ M-x inherit-org-fontify-buffer
 #+END_SRC
 
 Fontify any bufffers just like org mode.
-For Programming modes, after comment start, insert */+/- followed by a space.
-For Text modes, fundemental mode, you can just insert */+/- as starting just like org mode.
+For Programming modes, after comment start, insert =*/+/-= followed by a space.
+For Text modes, fundemental mode, you can just insert =*/+/-= as starting just like org mode.
+
+This feature is not perfect.
+
+I found it is useful when I want to make some comments stand out than others, by just adding some =*=
+[[demo.gif]]
