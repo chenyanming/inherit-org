@@ -49,11 +49,11 @@ The following major modes are supported at this moment:
 
 * Screenshots
 ** w3m
-#+html: <p align="center"><img src="img/w3m.png" width="60%"/></p>
+[[img/w3m.png]]
 ** Info
-#+html: <p align="center"><img src="img/Info.png" width="60%"/></p>
+[[img/Info.png]]
 ** helpful
-#+html: <p align="center"><img src="img/helpful.png" width="60%"/></p>
+[[img/helpful.png]]
 ** Fundamental mode or other modes
 [[img/Fundamental.png]]
 [[img/Fundamental-2.png]]
