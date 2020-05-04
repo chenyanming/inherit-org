@@ -50,31 +50,33 @@
   :group 'inherit-org
   :type '(repeat (string :tag "Bullet character")))
 
-
-(defvar inherit-org-outline-regexp (concat " ?+"
-                                       (regexp-opt
-                                        inherit-org-bullets-bullet-list
-                                        t) " +")
-  "TODO: Regexp to match inherit-org headlines.")
-
-(defvar inherit-org-outline-regexp-bol (concat " ?+"
-                                           (regexp-opt
-                                            inherit-org-bullets-bullet-list
-                                            t) "\\( +\\)")
-  "TODO: Regexp to match inherit-org headlines.
-This is similar to `inherit-org-outline-regexp' but additionally makes
-sure that we are at the beginning of the line.")
-
-(defvar inherit-org-imenu-regexp-bol (concat "^\\(?: ?+\\)"
-                                         (regexp-opt
-                                          inherit-org-bullets-bullet-list
-                                          t) "\\( .*\\)$")
-  "TODO: Regexp to match inherit-org headlines.
-This is similar to `inherit-org-outline-regexp' but additionally makes
-sure that we are at the beginning of the line.")
-
 (defvar inherit-org-level 'inherit-org-level
   "Compute the header's nesting level in an outline.")
+
+(defun inherit-org-outline-regexp ()
+  "TODO: Regexp to match `inherit-org' headlines."
+  (concat " ?+"
+          (regexp-opt
+           inherit-org-bullets-bullet-list
+           t) " +"))
+
+(defun inherit-org-outline-regexp-bol ()
+  "TODO: Regexp to match `inherit-org' headlines.
+This is similar to `inherit-org-outline-regexp' but additionally makes
+sure that we are at the beginning of the line."
+  (concat " ?+"
+          (regexp-opt
+           inherit-org-bullets-bullet-list
+           t) "\\( +\\)"))
+
+(defun inherit-org-imenu-regexp-bol ()
+    "TODO: Regexp to match `inherit-org' headlines.
+This is similar to `inherit-org-outline-regexp' but additionally makes
+sure that we are at the beginning of the line."
+    (concat "^\\(?: ?+\\)"
+            (regexp-opt
+             inherit-org-bullets-bullet-list
+             t) "\\( .*\\)$"))
 
 (defun inherit-org-w3m-headline-fontify ()
   "Fontify bold text in the buffer containing halfdump."
@@ -156,11 +158,13 @@ For Text modes, fundemental mode, you can just insert */+/- as start just like o
          (inherit-org-additional-features-on))))
 
 (defun inherit-org-additional-features-off ()
+  "Disalbe imenu, outline and org-indent."
   (setq imenu-create-index-function nil)
   (outline-minor-mode -1)
   (org-indent-mode -1))
 
 (defun inherit-org-additional-features-on ()
+  "Enable imenu, outline and org-indent."
   (inherit-org-regexp)
   (setq imenu-create-index-function #'inherit-org-imenu-get-tree)
   (outline-minor-mode)
@@ -173,7 +177,7 @@ For Text modes, fundemental mode, you can just insert */+/- as start just like o
   (setq org-imenu-markers nil)
   (org-with-wide-buffer
    (goto-char (point-max))
-   (let* ((re inherit-org-imenu-regexp-bol)
+   (let* ((re (inherit-org-imenu-regexp-bol))
           (subs (make-vector (1+ org-imenu-depth) nil))
           (last-level 0))
      (while (re-search-backward re nil t)
@@ -204,7 +208,7 @@ For Text modes, fundemental mode, you can just insert */+/- as start just like o
 
 (defun inherit-org-regexp ()
   "Set regexp for outline minior mode."
-  (setq-local outline-regexp inherit-org-outline-regexp)
+  (setq-local outline-regexp (inherit-org-outline-regexp))
   (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
